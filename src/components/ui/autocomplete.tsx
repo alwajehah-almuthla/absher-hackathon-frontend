@@ -5,7 +5,7 @@ import { Autocomplete as AutocompletePrimitive } from "@base-ui-components/react
 
 import { cn } from "@/lib/utils";
 
-function Autocomplete<T>({
+function Autocomplete<T extends readonly { items: readonly any[]; }[]>({
   ...props
 }: React.ComponentProps<typeof AutocompletePrimitive.Root<T>>) {
   return <AutocompletePrimitive.Root data-slot="autocomplete" {...props} />;

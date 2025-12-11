@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { useState } from "react";
-import { LuExternalLink } from "react-icons/lu";
+import { LuLink } from "react-icons/lu";
 import Breadcrumb from "../tabaani-app/_components/Breadcrumb";
 import TourismPlaceCard from "./_components/TourismPlaceCard";
 
@@ -91,15 +91,13 @@ export default function EventApp() {
                         {formatDate(event.endDate)}
                       </TableCell>
                       <TableCell>
-                        <a
-                          href={event.registrationLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          href={`/event-app/register?eventId=${event.id}`}
                           className="inline-flex items-center gap-1 text-primary-500 hover:text-primary-600 transition-colors"
                         >
                           <span>سجل الآن</span>
-                          <LuExternalLink size={16} />
-                        </a>
+                          <LuLink size={16} />
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}
