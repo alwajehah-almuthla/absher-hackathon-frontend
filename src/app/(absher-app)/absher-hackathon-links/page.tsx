@@ -9,6 +9,7 @@ import {
   LuGlobe,
   LuLink,
   LuCalendarCog,
+  LuDownload,
 } from "react-icons/lu";
 
 type Deliverable = {
@@ -18,6 +19,7 @@ type Deliverable = {
   link: string;
   highlight?: boolean;
   internal?: boolean;
+  downloads?: { label: string; url: string }[];
 };
 
 const deliverables: Deliverable[] = [
@@ -26,6 +28,10 @@ const deliverables: Deliverable[] = [
     title: "العرض التقديمي",
     description: "عرض تقديمي شامل لمشروع الهاكاثون",
     link: "https://docs.google.com/presentation/d/1Qh_5btTbaHgRfi9y34wHyi4EwI8gcX7Bxnp9DEn7tRs/edit?usp=sharing",
+    downloads: [
+      { label: "تحميل PDF", url: "https://cwmh3quin9.ufs.sh/f/WZv0VWUz6yAHLCmXd1O7rSWl4bDwLpiPF9E8Vm0KtIA3TYhf" },
+      { label: "تحميل PowerPoint", url: "https://cwmh3quin9.ufs.sh/f/WZv0VWUz6yAH1olTLkAvCaLo6dcN7fVH3hpZnsI5rU4Emwg1" },
+    ],
   },
   {
     icon: LuMonitor,
@@ -68,12 +74,11 @@ const DeliverableCard = ({
   link,
   highlight,
   internal,
+  downloads,
 }: Deliverable) => {
   return (
-    <a
-      href={link}
-      {...(internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-      className={`bg-white rounded-xl shadow-md transition-all hover:shadow-xl p-6 min-w-[280px] flex flex-col group ${
+    <div
+      className={`bg-white rounded-xl shadow-md transition-all hover:shadow-xl p-6 min-w-[280px] flex flex-col ${
         highlight
           ? "ring-2 ring-primary-500 hover:ring-4 hover:ring-primary-400 transform hover:scale-105"
           : ""
@@ -81,16 +86,38 @@ const DeliverableCard = ({
     >
       <Icon className="w-12 h-12 mb-4 text-primary-500" />
       <section className="flex-1">
-        <h3 className="text-2xl mb-2 group-hover:text-primary-500 transition-colors">
+        <h3 className="text-2xl mb-2 text-neutral-900 transition-colors">
           {title}
         </h3>
         <p className="text-neutral-600">{description}</p>
       </section>
-      <div className="mt-4 flex items-center gap-2 text-primary-500">
-        <span>{internal ? "الانتقال للصفحة" : "فتح الرابط"}</span>
-        <LuLink className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" />
-      </div>
-    </a>
+
+      {downloads && downloads.length > 0 ? (
+        <div className="mt-4 space-y-2">
+          {downloads.map((download) => (
+            <a
+              key={download.url}
+              href={download.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-primary-500 hover:text-primary-600 transition-colors"
+            >
+              <LuDownload className="w-4 h-4" />
+              <span className="text-sm">{download.label}</span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <a
+          href={link}
+          {...(internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+          className="mt-4 flex items-center gap-2 text-primary-500 hover:text-primary-600 transition-colors group"
+        >
+          <span>{internal ? "الانتقال للصفحة" : "فتح الرابط"}</span>
+          <LuLink className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" />
+        </a>
+      )}
+    </div>
   );
 };
 
