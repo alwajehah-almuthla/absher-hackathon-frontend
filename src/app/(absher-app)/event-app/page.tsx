@@ -18,7 +18,7 @@ import Breadcrumb from "../tabaani-app/_components/Breadcrumb";
 import TourismPlaceCard from "./_components/TourismPlaceCard";
 
 export default function EventApp() {
-  const { data: events, isLoading: eventsLoading, error: eventsError } = useEvents();
+  const { data: eventsData, isLoading: eventsLoading, error: eventsError } = useEvents();
 
   // Default location (Riyadh center)
   const [userLocation] = useState({ lat: 24.7136, lng: 46.6753 });
@@ -65,7 +65,7 @@ export default function EventApp() {
             <div className="text-center py-12">
               <p className="text-red-500">حدث خطأ أثناء تحميل الفعاليات</p>
             </div>
-          ) : events && events.length > 0 ? (
+          ) : eventsData && eventsData.data.length > 0 ? (
             <div className="bg-white rounded-lg shadow-md overflow-hidden mb-16">
               <Table>
                 <TableHeader>
@@ -78,7 +78,7 @@ export default function EventApp() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {events.map((event) => (
+                  {eventsData.data.map((event) => (
                     <TableRow key={event.id} className="hover:bg-neutral-50">
                       <TableCell className="font-medium text-neutral-800">
                         {event.name}
@@ -92,7 +92,7 @@ export default function EventApp() {
                       </TableCell>
                       <TableCell>
                         <Link
-                          href={`/event-app/register?eventId=${event.id}`}
+                          href={`/event-register?eventId=${event.id}`}
                           className="inline-flex items-center gap-1 text-primary-500 hover:text-primary-600 transition-colors"
                         >
                           <span>سجل الآن</span>

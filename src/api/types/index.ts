@@ -54,6 +54,39 @@ export type Event = {
   createdAt: string;
 };
 
+export type EventsQuery = {
+  page?: number;
+  limit?: number;
+  category?: string;
+  city?: string;
+  search?: string;
+};
+
+export type EventsPaginatedResponse = {
+  data: Event[];
+  meta: {
+    page: number;
+    limit: number;
+    total_count: number;
+    total_pages: number;
+  };
+};
+
+export type CreateEventInput = {
+  name: string;
+  description?: string;
+  city: string;
+  latitude: string;
+  longitude: string;
+  registrationLink: string;
+  startDate: string;
+  endDate: string;
+  category?: string;
+  imageUrl?: string;
+};
+
+export type UpdateEventInput = Partial<CreateEventInput>;
+
 // ===============================================
 // TOURISM TYPES
 // ===============================================

@@ -8,6 +8,7 @@ import {
   LuFileCode,
   LuGlobe,
   LuLink,
+  LuCalendarCog,
 } from "react-icons/lu";
 
 type Deliverable = {
@@ -16,6 +17,7 @@ type Deliverable = {
   description: string;
   link: string;
   highlight?: boolean;
+  internal?: boolean;
 };
 
 const deliverables: Deliverable[] = [
@@ -44,6 +46,13 @@ const deliverables: Deliverable[] = [
     link: "https://absher-hackathon-api.alwjhah-almothla.com/reference",
   },
   {
+    icon: LuCalendarCog,
+    title: "إدارة الفعاليات",
+    description: "صفحة إدارة الفعاليات - إضافة وتعديل وحذف",
+    link: "/event-app/manage",
+    internal: true,
+  },
+  {
     icon: LuGlobe,
     title: "تطبيق الواجهة الأمامية",
     description: "التطبيق المباشر للواجهة الأمامية",
@@ -58,12 +67,12 @@ const DeliverableCard = ({
   description,
   link,
   highlight,
+  internal,
 }: Deliverable) => {
   return (
     <a
       href={link}
-      target="_blank"
-      rel="noopener noreferrer"
+      {...(internal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
       className={`bg-white rounded-xl shadow-md transition-all hover:shadow-xl p-6 min-w-[280px] flex flex-col group ${
         highlight
           ? "ring-2 ring-primary-500 hover:ring-4 hover:ring-primary-400 transform hover:scale-105"
@@ -78,7 +87,7 @@ const DeliverableCard = ({
         <p className="text-neutral-600">{description}</p>
       </section>
       <div className="mt-4 flex items-center gap-2 text-primary-500">
-        <span>فتح الرابط</span>
+        <span>{internal ? "الانتقال للصفحة" : "فتح الرابط"}</span>
         <LuLink className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" />
       </div>
     </a>

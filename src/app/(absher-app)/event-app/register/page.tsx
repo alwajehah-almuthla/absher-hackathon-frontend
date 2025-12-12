@@ -19,7 +19,7 @@ function EventRegistrationContent() {
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
   const { data: events, isLoading } = useEvents();
-  const event = events?.find((e) => e.id === eventId);
+  const event = events?.data?.find((e) => e.id === eventId);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -191,7 +191,10 @@ function EventRegistrationContent() {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <LuUser className="text-purple-600" size={18} />
                       <span>الاسم الكامل</span>
@@ -209,7 +212,10 @@ function EventRegistrationContent() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <LuMail className="text-blue-600" size={18} />
                       <span>البريد الإلكتروني</span>
@@ -228,7 +234,10 @@ function EventRegistrationContent() {
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <LuPhone className="text-cyan-600" size={18} />
                       <span>رقم الجوال</span>
@@ -247,7 +256,10 @@ function EventRegistrationContent() {
                 </div>
 
                 <div>
-                  <label htmlFor="nationalId" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label
+                    htmlFor="nationalId"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <LuUser className="text-purple-600" size={18} />
                       <span>رقم الهوية الوطنية</span>

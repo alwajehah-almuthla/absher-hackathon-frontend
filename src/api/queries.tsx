@@ -10,11 +10,15 @@ import type {
   ApiResponse,
   Child,
   ChildLocation,
+  CreateEventInput,
   Event,
+  EventsPaginatedResponse,
+  EventsQuery,
   NearbyTourismQuery,
   SeedAllResponse,
   SeedResponse,
   TourismPlace,
+  UpdateEventInput,
   User,
 } from "./types";
 
@@ -66,17 +70,33 @@ export const useChildLocation = (
 // ===============================================
 
 /**
- * Get all events
+ * Get all events with pagination
+ * @param params - Query parameters for pagination, filtering, and search
  */
-export const useEvents = (): UseQueryResult<Event[], Error> => {
+export const useEvents = (
+  params?: EventsQuery,
+  enabled = true,
+): UseQueryResult<EventsPaginatedResponse, Error> => {
   return useQuery({
-    queryKey: ["events"],
+    queryKey: ["events", params],
     queryFn: async () => {
+      const searchParams: Record<string, string> = {};
+      if (params?.page !== undefined) searchParams.page = params.page.toString();
+      if (params?.limit !== undefined) searchParams.limit = params.limit.toString();
+      if (params?.category) searchParams.category = params.category;
+      if (params?.city) searchParams.city = params.city;
+      if (params?.search) searchParams.search = params.search;
+
       const response = await apiClient
-        .get("api/events")
+        .get("api/events", { searchParams })
         .json<ApiResponse<Event[]>>();
-      return response.data;
+
+      return {
+        data: response.data,
+        meta: response.meta as EventsPaginatedResponse["meta"],
+      };
     },
+    enabled,
   });
 };
 
@@ -96,6 +116,84 @@ export const useEvent = (
       return response.data;
     },
     enabled: enabled && !!eventId,
+  });
+};
+
+/**
+ * Create a new event
+ */
+export const useCreateEvent = (options?: {
+  onSuccess?: () => void;
+  onError?: () => void;
+}): UseMutationResult<Event, Error, CreateEventInput> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (eventData: CreateEventInput) => {
+      const response = await apiClient
+        .post("api/events", { json: eventData })
+        .json<ApiResponse<Event>>();
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      options?.onSuccess?.();
+    },
+    onError: () => {
+      options?.onError?.();
+    },
+  });
+};
+
+/**
+ * Update an existing event
+ */
+export const useUpdateEvent = (options?: {
+  onSuccess?: () => void;
+  onError?: () => void;
+}): UseMutationResult<
+  Event,
+  Error,
+  { eventId: string; eventData: UpdateEventInput }
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ eventId, eventData }) => {
+      const response = await apiClient
+        .put(`api/events/${eventId}`, { json: eventData })
+        .json<ApiResponse<Event>>();
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["events", variables.eventId] });
+      options?.onSuccess?.();
+    },
+    onError: () => {
+      options?.onError?.();
+    },
+  });
+};
+
+/**
+ * Delete an event
+ */
+export const useDeleteEvent = (options?: {
+  onSuccess?: () => void;
+  onError?: () => void;
+}): UseMutationResult<void, Error, string> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (eventId: string) => {
+      await apiClient.delete(`api/events/${eventId}`);
+    },
+    onSuccess: (_, eventId) => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["events", eventId] });
+      options?.onSuccess?.();
+    },
+    onError: () => {
+      options?.onError?.();
+    },
   });
 };
 
